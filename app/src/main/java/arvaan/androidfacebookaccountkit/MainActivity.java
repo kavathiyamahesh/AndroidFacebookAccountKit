@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         String email = account.getEmail();
                         Log.e("TAG", "email : " + email);
+
                     } catch (Exception e) {
                         Toast.makeText(MainActivity.this, "You are not login with Email", Toast.LENGTH_LONG).show();
                     }
