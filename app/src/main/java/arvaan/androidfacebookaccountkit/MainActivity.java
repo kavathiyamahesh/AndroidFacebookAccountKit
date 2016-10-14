@@ -45,41 +45,47 @@ public class MainActivity extends AppCompatActivity {
                         // Ooppss permission denied
                     }
                 });
-
-        AccessToken accessToken = AccountKit.getCurrentAccessToken();
-        if (accessToken != null) {
-            Log.e("TAG", accessToken.getAccountId());
-            //Handle Returning User
-            //You alraedy login, handle your code as you want
-        } else {
-            //Handle new or logged out user
-            Log.e("TAG", "Need to new login");
-        }
     }
 
     public void onLoginPhone(final View view) {
-        loginType = LoginViaAccountKit.MOBILE_NUMBER;
-        final Intent intent = new Intent(this, AccountKitActivity.class);
-        AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
-                new AccountKitConfiguration.AccountKitConfigurationBuilder(LoginType.PHONE, AccountKitActivity.ResponseType.TOKEN);
-        intent.putExtra(
-                AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
-                configurationBuilder.build());
-        startActivityForResult(intent, APP_REQUEST_CODE);
+        AccessToken accessToken = AccountKit.getCurrentAccessToken();
+        if (accessToken != null) {
+            Log.e("TAG", accessToken.getAccountId());
+            //You already login, handle your code as you want
+            retrieveInformationAccountKit(null);
+        } else {
+            //Handle new or logged out user
+            loginType = LoginViaAccountKit.MOBILE_NUMBER;
+            final Intent intent = new Intent(this, AccountKitActivity.class);
+            AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
+                    new AccountKitConfiguration.AccountKitConfigurationBuilder(LoginType.PHONE, AccountKitActivity.ResponseType.TOKEN);
+            intent.putExtra(
+                    AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
+                    configurationBuilder.build());
+            startActivityForResult(intent, APP_REQUEST_CODE);
+        }
     }
 
     public void onLoginEmail(final View view) {
-        loginType = LoginViaAccountKit.EMAIL;
-        final Intent intent = new Intent(this, AccountKitActivity.class);
-        AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
-                new AccountKitConfiguration.AccountKitConfigurationBuilder(
-                        LoginType.EMAIL,
-                        AccountKitActivity.ResponseType.TOKEN); // or .ResponseType.TOKEN
-        // ... perform additional configuration ...
-        intent.putExtra(
-                AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
-                configurationBuilder.build());
-        startActivityForResult(intent, APP_REQUEST_CODE);
+        AccessToken accessToken = AccountKit.getCurrentAccessToken();
+        if (accessToken != null) {
+            Log.e("TAG", accessToken.getAccountId());
+            //You already login, handle your code as you want
+            retrieveInformationAccountKit(null);
+        } else {
+            //Handle new or logged out user
+            loginType = LoginViaAccountKit.EMAIL;
+            final Intent intent = new Intent(this, AccountKitActivity.class);
+            AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
+                    new AccountKitConfiguration.AccountKitConfigurationBuilder(
+                            LoginType.EMAIL,
+                            AccountKitActivity.ResponseType.TOKEN);
+
+            intent.putExtra(
+                    AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
+                    configurationBuilder.build());
+            startActivityForResult(intent, APP_REQUEST_CODE);
+        }
     }
 
     public void logoutAccountKit(final View view) {
@@ -104,11 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     toastMessage = String.format("Success:%s...", loginResult.getAuthorizationCode());
                 }
-
-                // If you have an authorization code, retrieve it from
-                // loginResult.getAuthorizationCode()
-                // and pass it to your server and exchange it for an access token.
-                // Success! Start your next activity...
+                retrieveInformationAccountKit(null);
             }
 
             // Surface the result to your user in an appropriate way.
